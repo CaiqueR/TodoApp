@@ -1,11 +1,12 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 // import { Container } from './styles';
 
 export default class Grid extends Component {
   toCssClasses(numbers) {
-    const cols = numbers ? numbers.split(" ") : [];
-    let classes = "";
+    const cols = this.numbers ? numbers.split(' ') : [];
+    let classes = '';
 
     if (cols[0]) classes += `col-xs-${cols[0]} `;
     if (cols[1]) classes += `col-sm-${cols[1]} `;
@@ -16,7 +17,13 @@ export default class Grid extends Component {
   }
 
   render() {
-    const gridClasses = this.toCssClasses(this.props.cols || 12);
-    return <div className={gridClasses}>{this.props.children}</div>;
+    const { cols, children } = this.props;
+    const gridClasses = this.toCssClasses(cols || '12');
+    return <div className={gridClasses}>{children}</div>;
   }
 }
+
+Grid.propTypes = {
+  cols: PropTypes.string.isRequired,
+  children: PropTypes.any.isRequired,
+};

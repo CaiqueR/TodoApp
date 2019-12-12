@@ -1,8 +1,8 @@
-import React from "react";
-import "./App.css";
+import React from 'react';
+import './App.css';
 
-import Menu from "./components/menu/menu";
-import Routes from "./main/routes";
+import Menu from './components/menu/menu';
+import Routes from './main/routes';
 
 function App() {
   return (

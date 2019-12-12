@@ -1,36 +1,79 @@
-import React, { Component } from "react";
-import PageHeader from "../PageHeader/PageHeader";
-import TodoForm from "./TodoForm";
-import TodoList from "./TodoList";
+/* eslint-disable no-underscore-dangle */
+import React, { Component } from 'react';
+
+import PageHeader from '../PageHeader/PageHeader';
+import TodoForm from './TodoForm';
+import TodoList from './TodoList';
+import api from '../../services/api';
 
 export default class Todo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      description: "",
-      list: []
+      description: '',
+      list: [],
     };
+
+    this.refresh();
   }
-  handleAdd = () => {
-    console.log(this);
+
+  refresh = (description = '') => {
+    const search = description ? `&description__regex=/${description}/` : '';
+    api.get(`/todos?sort=-createdAt${search}`).then((result) => {
+      this.setState({ ...this.state, description, list: result.data });
+    });
   };
 
-  handleChange = e => {
-    let teste = 1;
-    let arr = { ...this.state, teste: teste + 1 };
-    console.log(arr);
+  handleSearch = () => {
+    const { description } = this.state;
+    this.refresh(description);
+  }
+
+  handleAdd = () => {
+    const { description } = this.state;
+    api.post('/todos', { description }).then(() => {
+      this.refresh();
+    });
+  };
+
+  handleRemove = (todo) => {
+    const { description } = this.state;
+    api.delete(`/todos/${todo._id}`).then(() => this.refresh(description));
+  }
+
+  handleMarkAsDone = (todo) => {
+    const { description } = this.state;
+    api.put(`/todos/${todo._id}`, { ...todo, done: true }).then(() => this.refresh(description));
+  }
+
+  handleMarkAsPending = (todo) => {
+    const { description } = this.state;
+    api.put(`/todos/${todo._id}`, { ...todo, done: false }).then(() => this.refresh(description));
+  }
+
+  handleChange = (e) => {
     this.setState({ ...this.state, description: e.target.value });
   };
+
+
   render() {
+    const { description, list } = this.state;
     return (
       <div>
         <PageHeader name="Tarefas" small="Cadastro" />
         <TodoForm
-          description={this.state.description}
+          description={description}
           handleAdd={this.handleAdd}
           handleChange={this.handleChange}
+          handleSearch={this.handleSearch}
+          handleClear={this.refresh}
         />
-        <TodoList />
+        <TodoList
+          proplist={list}
+          handleMarkAsDone={this.handleMarkAsDone}
+          handleMarkAsPending={this.handleMarkAsPending}
+          handleRemove={this.handleRemove}
+        />
       </div>
     );
   }

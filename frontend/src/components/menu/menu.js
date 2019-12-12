@@ -1,12 +1,13 @@
-import React from "react";
+import React from 'react';
 
 // import { Container } from './styles';
 
-const Menu = props => (
+const Menu = (props) => (
   <nav className="navbar navbar-expand-lg navbar-dark bg-primary rounded">
     <div className="container">
       <a className="navbar-brand" href="/todos">
-        <i className="fa fa-calendar-check-o mr-2"></i>TodoApp
+        <i className="fa fa-calendar-check-o mr-2" />
+TodoApp
       </a>
 
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
